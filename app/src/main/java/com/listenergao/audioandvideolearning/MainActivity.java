@@ -1,5 +1,6 @@
 package com.listenergao.audioandvideolearning;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,9 +10,11 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.listenergao.audioandvideolearning.activity.BaseActivity;
+import com.listenergao.audioandvideolearning.activity.DrawPictureActivity;
 import com.listenergao.audioandvideolearning.adapter.CategoryAdapter;
 import com.listenergao.audioandvideolearning.mode.CategoryBean;
 import com.listenergao.audioandvideolearning.utils.CommonConfig;
+import com.listenergao.audioandvideolearning.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +55,13 @@ public class MainActivity extends BaseActivity implements BaseQuickAdapter.OnIte
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Toast.makeText(this, "通过三种方式绘制图片",Toast.LENGTH_SHORT).show();
+        ToastUtils.toast("通过三种方式绘制图片");
+        CategoryBean item = (CategoryBean) adapter.getItem(position);
+        if (item == null) return;
+        switch (item.tag) {
+            case CommonConfig.DRAW_PICTURE:
+                startActivity(new Intent(MainActivity.this, DrawPictureActivity.class));
+                break;
+        }
     }
 }
