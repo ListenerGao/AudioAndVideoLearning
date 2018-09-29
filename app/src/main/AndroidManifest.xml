@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.listenergao.audioandvideolearning">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application
         android:name=".LearningApplication"
         android:allowBackup="false"
@@ -19,6 +23,7 @@
         </activity>
         <activity android:name=".activity.BaseActivity" />
         <activity android:name=".activity.DrawPictureActivity" />
+        <activity android:name=".activity.RecordActivity" />
     </application>
 
 </manifest>

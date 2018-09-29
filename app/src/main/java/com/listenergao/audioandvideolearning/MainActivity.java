@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.listenergao.audioandvideolearning.activity.BaseActivity;
 import com.listenergao.audioandvideolearning.activity.DrawPictureActivity;
+import com.listenergao.audioandvideolearning.activity.RecordActivity;
 import com.listenergao.audioandvideolearning.adapter.CategoryAdapter;
 import com.listenergao.audioandvideolearning.mode.CategoryBean;
 import com.listenergao.audioandvideolearning.utils.CommonConfig;
@@ -22,6 +23,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * @author listenergao
+ */
 public class MainActivity extends BaseActivity implements BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.recycler_view)
@@ -43,6 +47,7 @@ public class MainActivity extends BaseActivity implements BaseQuickAdapter.OnIte
         mCategorys = new ArrayList<>();
 
         mCategorys.add(new CategoryBean("通过三种方式绘制图片", CommonConfig.DRAW_PICTURE));
+        mCategorys.add(new CategoryBean("通过AudioRecord录音", CommonConfig.RECORD));
 
         CategoryAdapter mAdapter = new CategoryAdapter(mCategorys);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -55,12 +60,19 @@ public class MainActivity extends BaseActivity implements BaseQuickAdapter.OnIte
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        ToastUtils.toast("通过三种方式绘制图片");
         CategoryBean item = (CategoryBean) adapter.getItem(position);
-        if (item == null) return;
+        if (item == null) {
+            return;
+        }
         switch (item.tag) {
             case CommonConfig.DRAW_PICTURE:
                 startActivity(new Intent(MainActivity.this, DrawPictureActivity.class));
+                break;
+
+            case CommonConfig.RECORD:
+                startActivity(new Intent(MainActivity.this, RecordActivity.class));
+                break;
+            default:
                 break;
         }
     }
