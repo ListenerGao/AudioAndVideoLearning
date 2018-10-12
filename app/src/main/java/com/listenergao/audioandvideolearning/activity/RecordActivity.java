@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.listenergao.audioandvideolearning.R;
+import com.linglong.lame.Lame;
 import com.listenergao.audioandvideolearning.utils.ToastUtils;
 
 import java.io.File;
@@ -72,6 +73,7 @@ public class RecordActivity extends BaseActivity {
     private boolean isRecording = false;
     private FileOutputStream mFileOutputStream;
     private ExecutorService mExecutorService;
+    private Lame mLame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,9 @@ public class RecordActivity extends BaseActivity {
 
         createFile();
         mExecutorService = Executors.newSingleThreadExecutor();
+
+        mLame = new Lame();
+        mLame.init(1,44100,64);
 
 
     }
@@ -120,7 +125,6 @@ public class RecordActivity extends BaseActivity {
         if (isRecording) {
             ToastUtils.toast("录音中...");
         } else {
-
             if (mExecutorService == null) {
                 mExecutorService = Executors.newSingleThreadExecutor();
             }
@@ -138,10 +142,11 @@ public class RecordActivity extends BaseActivity {
      */
     private void record() {
         try {
-            mFileName = System.currentTimeMillis() + "";
+            mFileName = System.currentTimeMillis() + ".mp3";
             mFileOutputStream = new FileOutputStream(new File(mFilePath + mFileName));
 
-            byte[] data = new byte[mRecordBufSize];
+//            byte[] data = new byte[mRecordBufSize];
+            short[] data = new short[mRecordBufSize];
 
             int audioRecordBufferSize = AudioRecord.getMinBufferSize(SIMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT);
             Log.d("gys", "audioRecordBufferSize = " + audioRecordBufferSize);
@@ -159,8 +164,13 @@ public class RecordActivity extends BaseActivity {
                 }
 
                 if (mAudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
+                    // 音频转码成mp3
+                    byte[] encodeData = mLame.encode(data, read);
+                    if (encodeData == null || encodeData.length < 10) {
+                        break;
+                    }
                     //保存到指定文件
-                    mFileOutputStream.write(data, 0, read);
+                    mFileOutputStream.write(encodeData, 0, encodeData.length);
                 }
             }
 
@@ -177,7 +187,6 @@ public class RecordActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
@@ -186,6 +195,7 @@ public class RecordActivity extends BaseActivity {
     private void stopRecord() {
         Log.d("gys", "停止录音");
         isRecording = false;
+        mLame.destroy();
         if (mAudioRecord != null) {
             mAudioRecord.stop();
             mAudioRecord.release();
