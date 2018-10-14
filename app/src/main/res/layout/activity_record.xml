@@ -27,11 +27,26 @@
         android:layout_marginTop="@dimen/dp_10"
         android:text="停止录音" />
 
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/bt_play_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
         android:text="播放录音" />
+
+    <Button
+        android:id="@+id/bt_stop_play_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="停止播放"
+        />
 
 </LinearLayout>
