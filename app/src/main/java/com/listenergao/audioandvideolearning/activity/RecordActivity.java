@@ -35,7 +35,7 @@ public class RecordActivity extends BaseActivity implements MediaPlayer.OnComple
     /**
      * 录音采集来源，此处是从麦克风采集
      */
-    private static int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC;
+    private static final int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC;
     /**
      * 设置采样频率
      */

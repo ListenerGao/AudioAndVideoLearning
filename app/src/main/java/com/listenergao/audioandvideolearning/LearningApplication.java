@@ -3,6 +3,9 @@ package com.listenergao.audioandvideolearning;
 import android.app.Application;
 import android.content.Context;
 
+/**
+ * @author listenergao
+ */
 public class LearningApplication extends Application {
 
     private static Context sContext;

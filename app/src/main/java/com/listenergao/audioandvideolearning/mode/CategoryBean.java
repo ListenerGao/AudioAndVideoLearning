@@ -1,5 +1,8 @@
 package com.listenergao.audioandvideolearning.mode;
 
+/**
+ * @author listenergao
+ */
 public class CategoryBean {
 
     public String categoryName;
