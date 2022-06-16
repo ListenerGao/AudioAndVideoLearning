@@ -5,14 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.listenergao.audioandvideolearning.R;
 
 /**
- * 自定义View 显示图片 
+ * 自定义View 显示图片
+ * @author listenergao
  */
 public class CustomImageView extends View {
     private Bitmap mBitmap;

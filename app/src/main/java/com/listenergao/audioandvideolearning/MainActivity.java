@@ -2,43 +2,38 @@ package com.listenergao.audioandvideolearning;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.listenergao.audioandvideolearning.activity.BaseActivity;
 import com.listenergao.audioandvideolearning.activity.DrawPictureActivity;
 import com.listenergao.audioandvideolearning.activity.RecordActivity;
 import com.listenergao.audioandvideolearning.adapter.CategoryAdapter;
+import com.listenergao.audioandvideolearning.databinding.ActivityMainBinding;
 import com.listenergao.audioandvideolearning.mode.CategoryBean;
 import com.listenergao.audioandvideolearning.utils.CommonConfig;
-import com.listenergao.audioandvideolearning.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * @author listenergao
  */
-public class MainActivity extends BaseActivity implements BaseQuickAdapter.OnItemClickListener {
+public class MainActivity extends BaseActivity implements OnItemClickListener {
 
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-
+    private ActivityMainBinding mBinding;
     private List<CategoryBean> mCategorys;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
         initData();
     }
@@ -50,8 +45,8 @@ public class MainActivity extends BaseActivity implements BaseQuickAdapter.OnIte
         mCategorys.add(new CategoryBean("通过AudioRecord录音", CommonConfig.RECORD));
 
         CategoryAdapter mAdapter = new CategoryAdapter(mCategorys);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter);
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.recyclerView.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener(this);
 

@@ -7,25 +7,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.listenergao.audioandvideolearning.R;
+import com.listenergao.audioandvideolearning.databinding.ActivityDrawPictureBinding;
 import com.listenergao.audioandvideolearning.utils.ToastUtils;
-import com.listenergao.audioandvideolearning.view.CustomImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 通过三种方式绘制图片
@@ -33,59 +27,58 @@ import butterknife.OnClick;
  *
  * @author listenergao
  */
-public class DrawPictureActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+public class DrawPictureActivity extends AppCompatActivity implements SurfaceHolder.Callback, View.OnClickListener {
 
-    @BindView(R.id.btn_one)
-    Button mBtnOne;
-    @BindView(R.id.btn_two)
-    Button mBtnTwo;
-    @BindView(R.id.btn_three)
-    Button mBtnThree;
-    @BindView(R.id.tv_introduction)
-    TextView mTvIntroduction;
-    @BindView(R.id.iv_show)
-    ImageView mIvShow;
-    @BindView(R.id.custom_image_view)
-    CustomImageView mCustomImageView;
-    @BindView(R.id.surface_view)
-    SurfaceView mSurfaceView;
+
+    private ActivityDrawPictureBinding mBinding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_draw_picture);
-        ButterKnife.bind(this);
+        mBinding = ActivityDrawPictureBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+
+        setClickListener();
 
         drawPictureWithSurfaceView();
 
     }
 
-    @OnClick({R.id.btn_one, R.id.btn_two, R.id.btn_three})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
+    private void setClickListener() {
+        mBinding.btnOne.setOnClickListener(this);
+        mBinding.btnTwo.setOnClickListener(this);
+        mBinding.btnThree.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btn_one:
-                mIvShow.setVisibility(View.VISIBLE);
-                mCustomImageView.setVisibility(View.GONE);
-                mSurfaceView.setVisibility(View.GONE);
-                mTvIntroduction.setText("通过ImageView绘制图片");
+                mBinding.ivShow.setVisibility(View.VISIBLE);
+                mBinding.customImageView.setVisibility(View.GONE);
+                mBinding.surfaceView.setVisibility(View.GONE);
+                mBinding.tvIntroduction.setText("通过ImageView绘制图片");
                 drawPictureWithImageView();
                 break;
             case R.id.btn_two:
-                mIvShow.setVisibility(View.GONE);
-                mCustomImageView.setVisibility(View.VISIBLE);
-                mSurfaceView.setVisibility(View.GONE);
-                mTvIntroduction.setText("通过自定义View的方法绘制图片");
-                mCustomImageView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+                mBinding.ivShow.setVisibility(View.GONE);
+                mBinding.customImageView.setVisibility(View.VISIBLE);
+                mBinding.surfaceView.setVisibility(View.GONE);
+                mBinding.tvIntroduction.setText("通过自定义View的方法绘制图片");
+                mBinding.customImageView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 
                 break;
             case R.id.btn_three:
-                mIvShow.setVisibility(View.GONE);
-                mCustomImageView.setVisibility(View.GONE);
-                mSurfaceView.setVisibility(View.VISIBLE);
-                mTvIntroduction.setText("通过SurfaceView绘制图片");
+                mBinding.ivShow.setVisibility(View.GONE);
+                mBinding.customImageView.setVisibility(View.GONE);
+                mBinding.surfaceView.setVisibility(View.VISIBLE);
+                mBinding.tvIntroduction.setText("通过SurfaceView绘制图片");
                 drawPictureWithSurfaceView();
 
+                break;
+            default:
                 break;
         }
     }
@@ -100,7 +93,7 @@ public class DrawPictureActivity extends AppCompatActivity implements SurfaceHol
         if (bitmap == null) {
             ToastUtils.toast("获取图片失败");
         } else {
-            mIvShow.setImageBitmap(bitmap);
+            mBinding.ivShow.setImageBitmap(bitmap);
         }
     }
 
@@ -122,7 +115,7 @@ public class DrawPictureActivity extends AppCompatActivity implements SurfaceHol
      */
     private void drawPictureWithSurfaceView() {
         Log.d("gys", "drawPictureWithSurfaceView");
-        SurfaceHolder holder = mSurfaceView.getHolder();
+        SurfaceHolder holder = mBinding.surfaceView.getHolder();
         holder.addCallback(this);
     }
 
@@ -130,20 +123,20 @@ public class DrawPictureActivity extends AppCompatActivity implements SurfaceHol
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         Log.d("gys", "surfaceCreated");
-                if (surfaceHolder != null) {
-                    Paint paint = new Paint();
-                    paint.setAntiAlias(true);
-                    paint.setStyle(Paint.Style.STROKE);
-                    //获取图片bitmap
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pic);
-                    //先锁定当前SurfaceView的画布
-                    Canvas canvas = surfaceHolder.lockCanvas();
-                    //执行绘制操作
-                    canvas.drawBitmap(bitmap, 0, 0, paint);
-                    //解除锁定，并显示在界面上
-                    surfaceHolder.unlockCanvasAndPost(canvas);
+        if (surfaceHolder != null) {
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setStyle(Paint.Style.STROKE);
+            //获取图片bitmap
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pic);
+            //先锁定当前SurfaceView的画布
+            Canvas canvas = surfaceHolder.lockCanvas();
+            //执行绘制操作
+            canvas.drawBitmap(bitmap, 0, 0, paint);
+            //解除锁定，并显示在界面上
+            surfaceHolder.unlockCanvasAndPost(canvas);
 
-                }
+        }
     }
 
     @Override
@@ -155,4 +148,6 @@ public class DrawPictureActivity extends AppCompatActivity implements SurfaceHol
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         Log.d("gys", "surfaceDestroyed");
     }
+
+
 }

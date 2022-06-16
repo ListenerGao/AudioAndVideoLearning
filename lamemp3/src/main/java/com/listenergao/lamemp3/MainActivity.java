@@ -1,7 +1,8 @@
 package com.listenergao.lamemp3;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * create on 18/10/14

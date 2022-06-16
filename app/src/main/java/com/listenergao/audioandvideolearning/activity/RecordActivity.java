@@ -10,12 +10,10 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
-import com.listenergao.audioandvideolearning.R;
 import com.linglong.lame.Lame;
+import com.listenergao.audioandvideolearning.R;
+import com.listenergao.audioandvideolearning.databinding.ActivityRecordBinding;
 import com.listenergao.audioandvideolearning.utils.ToastUtils;
 
 import java.io.File;
@@ -24,9 +22,6 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 录音
@@ -34,20 +29,8 @@ import butterknife.OnClick;
  *
  * @author listenergao
  */
-public class RecordActivity extends BaseActivity implements MediaPlayer.OnCompletionListener {
+public class RecordActivity extends BaseActivity implements MediaPlayer.OnCompletionListener, View.OnClickListener {
 
-
-    @BindView(R.id.tv_content)
-    TextView mTvContent;
-    @BindView(R.id.bt_start_record)
-    Button mBtStartRecord;
-    @BindView(R.id.bt_stop_record)
-    Button mBtStopRecord;
-    @BindView(R.id.bt_play_record)
-    Button mBtPlayRecord;
-
-    @BindView(R.id.seek_bar)
-    SeekBar mSeekBar;
 
     /**
      * 录音采集来源，此处是从麦克风采集
@@ -86,11 +69,15 @@ public class RecordActivity extends BaseActivity implements MediaPlayer.OnComple
     private static Handler sHandler = new Handler();
     private Runnable mProgressRunnable;
 
+    private ActivityRecordBinding mBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
-        ButterKnife.bind(this);
+        mBinding = ActivityRecordBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+
+        setClickListener();
 
         createFile();
         mExecutorService = Executors.newSingleThreadExecutor();
@@ -102,16 +89,22 @@ public class RecordActivity extends BaseActivity implements MediaPlayer.OnComple
             @Override
             public void run() {
                 Log.d("gys", "duration = " + mPlayer.getDuration() + "currentPosition = " + mPlayer.getCurrentPosition());
-                mSeekBar.setProgress(mPlayer.getCurrentPosition());
+                mBinding.seekBar.setProgress(mPlayer.getCurrentPosition());
                 sHandler.postDelayed(this, 1000);
             }
         };
 
     }
 
-    @OnClick({R.id.bt_start_record, R.id.bt_stop_record, R.id.bt_play_record, R.id.bt_stop_play_record})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
+    private void setClickListener() {
+        mBinding.btStartRecord.setOnClickListener(this);
+        mBinding.btStopRecord.setOnClickListener(this);
+        mBinding.btStopPlayRecord.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.bt_start_record:
                 startRecord();
                 break;
@@ -293,7 +286,7 @@ public class RecordActivity extends BaseActivity implements MediaPlayer.OnComple
             return;
         }
 
-        mSeekBar.setVisibility(View.VISIBLE);
+        mBinding.seekBar.setVisibility(View.VISIBLE);
 
         try {
             if (mPlayer == null) {
@@ -306,7 +299,7 @@ public class RecordActivity extends BaseActivity implements MediaPlayer.OnComple
             mPlayer.prepare();
             mPlayer.start();
 
-            mSeekBar.setMax(mPlayer.getDuration());
+            mBinding.seekBar.setMax(mPlayer.getDuration());
             sHandler.post(mProgressRunnable);
 
         } catch (IOException e) {
@@ -352,4 +345,6 @@ public class RecordActivity extends BaseActivity implements MediaPlayer.OnComple
         Log.d("gys", "播放完了...");
         stopPlayRecord();
     }
+
+
 }
