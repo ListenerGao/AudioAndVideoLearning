@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 30
-    buildToolsVersion '30.0.3'
+    compileSdk Config.compileSdkVersion
+    buildToolsVersion Config.buildToolsVersion
     defaultConfig {
-        applicationId "com.listenergao.audioandvideolearning"
-        minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        applicationId Config.applicationId
+        minSdkVersion Config.minSdkVersion
+        targetSdkVersion Config.targetSdkVersion
+        versionCode Config.versionCode
+        versionName Config.versionName
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -19,20 +19,22 @@ android {
         }
     }
 
-    viewBinding{
+    viewBinding {
         enabled = true
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation Config.depConfig.kotlin
+    implementation Config.depConfig.androidx_appcompat
+    implementation Config.depConfig.androidx_constraintlayout
+    implementation Config.depConfig.androidx_recyclerview
+    implementation Config.depConfig.androidx_cardview
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
+
+    implementation Config.depConfig.BaseRecyclerViewAdapterHelper
 }

@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener {
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CategoryBean item = (CategoryBean) adapter.getItem(position);
+
         if (item == null) {
             return;
         }
