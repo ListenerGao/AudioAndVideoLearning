@@ -1,0 +1,4 @@
+APP_ABI := all
+APP_MODULES := mp3lame
+APP_CFLAGS += -DSTDC_HEADERS
+APP_PLATFORM := android-19
